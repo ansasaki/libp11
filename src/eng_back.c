@@ -30,6 +30,9 @@
 #include <stdio.h>
 #include <string.h>
 
+/* For strncasecmp portability */
+#include <strings.h>
+
 /* The maximum length of an internally-allocated PIN */
 #define MAX_PIN_LENGTH   32
 #define MAX_VALUE_LEN	200

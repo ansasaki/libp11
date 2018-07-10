@@ -11,14 +11,14 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/m4/ltversion.m4 $(srcdir)/m4/lt~obsolete.m4 \
 	$(srcdir)/m4/ltoptions.m4 \
 	$(srcdir)/packaged
-EXTRA_DIST = Makefile.mak make.rules.mak README.md
+EXTRA_DIST = Makefile.mak make.rules.mak README.md m4/gnulib-cache.m4
 
 dist_noinst_DATA = COPYING INSTALL.md
 
 dist_doc_DATA = NEWS
 
 # Prerequisites must be first on the list
-SUBDIRS = src doc examples tests
+SUBDIRS = src lib doc examples tests
 
 # Allow detection of packaged tarball
 dist-hook:

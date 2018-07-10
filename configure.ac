@@ -25,8 +25,10 @@ ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_CANONICAL_HOST
 AC_PROG_CC
+gl_EARLY
 PKG_PROG_PKG_CONFIG
 AC_C_BIGENDIAN
+gl_INIT
 
 # we need to set our soversion based on openssl's soversion to avoid
 # issues with applications linking to new openssl, old libp11, and vice versa
@@ -258,6 +260,7 @@ AC_CONFIG_FILES([
 	doc/doxygen.conf
 	examples/Makefile
 	tests/Makefile
+	lib/Makefile
 ])
 AC_OUTPUT
 
