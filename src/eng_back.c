@@ -831,8 +831,8 @@ static EVP_PKEY *ctx_load_key(ENGINE_CTX *ctx, const char *s_slot_key_id,
 			break;
 		}
 
-		ctx_log(ctx, 1, "Found slot:  %s\n", slot->description);
-		ctx_log(ctx, 1, "Found token: %s\n", slot->token->label);
+		ctx_log(ctx, 0, "Found slot:  %s\n", slot->description);
+		ctx_log(ctx, 0, "Found token: %s\n", slot->token->label);
 
 		/* Both private and public keys can have the CKA_PRIVATE attribute
 		 * set and thus require login (even to retrieve attributes!) */
@@ -887,14 +887,15 @@ static EVP_PKEY *ctx_load_key(ENGINE_CTX *ctx, const char *s_slot_key_id,
 
 		if (s_slot_key_id && *s_slot_key_id &&
 				(key_id_len != 0 || key_label != NULL)) {
+			ctx_log(ctx, 0, "Searching for key %s\n", key_label);
 			for (m = 0; m < key_count; m++) {
 				PKCS11_KEY *k = keys + m;
 
-				ctx_log(ctx, 1, "  %2u %c%c id=", m + 1,
+				ctx_log(ctx, 0, "  %2u %c%c id=", m + 1,
 						k->isPrivate ? 'P' : ' ',
 						k->needLogin ? 'L' : ' ');
-				dump_hex(ctx, 1, k->id, k->id_len);
-				ctx_log(ctx, 1, " label=%s\n", k->label);
+				dump_hex(ctx, 0, k->id, k->id_len);
+				ctx_log(ctx, 0, " label=%s\n", k->label);
 				if (key_label != NULL && strcmp(k->label, key_label) == 0)
 					selected_key = k;
 				if (key_id_len != 0 && k->id_len == key_id_len
