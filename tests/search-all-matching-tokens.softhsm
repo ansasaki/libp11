@@ -111,6 +111,36 @@ if test $? != 0;then
 	exit 1;
 fi
 
+# Create devices with the same label, but containing different objects
+# Each device will contain objects which end with corresponding number
+# e.g. token libp11-test-0 will contain objects label-0-1, label-1-0, etc.
+echo "Trying to duplicate devices"
+dup=0
+while [ $dup -le ${NUM_DEVICES} ]; do
+	create_devices $NUM_DEVICES $PIN $PUK "libp11-test" "label-$dup"
+	echo "trying to print content of libp11-test-$dup"
+	p11tool --list-all "pkcs11:token=libp11-test-$dup;type=public"
+	dup=$(($dup + 1))
+done
+
+# Verify using the public key from each token
+j=0
+k=0
+while [ $j -le ${NUM_DEVICES} ]; do
+	while [ $k -le ${NUM_DEVICES} ]; do
+		pubkey="pkcs11:token=libp11-test-$j;object=label-$k-$j;type=public;pin-value=1234"
+		openssl pkeyutl -engine pkcs11 -keyform engine -pubin -inkey "${pubkey}" \
+			-verify -sigfile "${outdir}/signature.bin" -in "${outdir}/in.txt"
+		if test $? != 0;then
+			echo "Failed to verify the signature using the PKCS#11 URI ${pubkey}"
+			exit 1;
+		fi
+		k=$(($k + 1))
+	done
+	k=0
+	j=$(($j + 1))
+done
+
 rm -rf "$outdir"
 
 exit 0
